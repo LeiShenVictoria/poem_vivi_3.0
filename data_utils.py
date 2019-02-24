@@ -126,15 +126,8 @@ def read_train_data(file):
     pairs_tensor = []
     pairs_li = []
     lines = 0
-    # source_tensors = torch.Tensor([])
-    # target_tensors = torch.Tensor([])
-    # source_tensors = source_tensors.long()
-    # target_tensors = target_tensors.long()
-    # source_tensors_li = []
-    # target_tensors_li = []
 
     for line in open(file, 'r', encoding='utf-8').readlines():
-    # for line in open('resource/poem_500.txt', 'r', encoding='utf-8').readlines():
         lines += 1
         source, target = line.split('==')
         # ?
@@ -146,20 +139,11 @@ def read_train_data(file):
         target_words = target.replace('\t', ' / ').split(' ') + ['/'] + target.split('\t')[0].split(' ') # 用5个句子训练
         
         source_ids = [word2id.get(word, vocab_size - 1) for word in source_words] # default = 4776 '-' ?
-        # source_ids.append(EOS_token)
-        # source_ids = pad_seq(source_ids, INPUT_MAX_LENGTH) # padding
         source_tensor = torch.tensor(source_ids, dtype=torch.long, device=device).view(-1, 1)
-        # source_tensors_li.append(source_tensor) # li
-        # source_tensor_reshape = torch.reshape(source_tensor, (1, -1, 1)) # 为了拼成tensor
-        # source_tensors = torch.cat((source_tensors, source_tensor_reshape), 0) #
         
         target_ids = [word2id.get(word, vocab_size - 1) for word in target_words]
         target_ids.append(EOS_token)
-        # target_ids = pad_seq(target_ids, MAX_LENGTH) # padding
         target_tensor = torch.tensor(target_ids, dtype=torch.long, device=device).view(-1, 1)
-        # target_tensors_li.append(source_tensor) # li
-        # target_tensor_reshape = torch.reshape(target_tensor, (1, -1, 1)) # 为了拼成tensor
-        # target_tensors = torch.cat((target_tensors, target_tensor_reshape), 0) #
         
         pairs_tensor.append((source_tensor, target_tensor))
         pairs_li.append([source_ids, target_ids])

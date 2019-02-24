@@ -47,12 +47,12 @@ elif poem_type == 'poem7':
 # file paths
 def get_options():
     options = {}
-    options['yunmu_file'] = 'resource/predict_resource/YunLv/yun_utf8.txt'
-    options['pingshui_file'] = ['resource/predict_resource/YunLv/ze_format.txt',
-                                'resource/predict_resource/YunLv/ping_format.txt']  # old
-    options['pingshui_file_new'] = ['resource/predict_resource/YunLv/yun_z_new.txt',
-                                    'resource/predict_resource/YunLv/yun_p_new.txt']  # new
-    options['hanzipinyin_file'] = 'resource/predict_resource/YunLv/hzpy.txt'
+    options['yunmu_file'] = 'resource/YunLv/yun_utf8.txt'
+    options['pingshui_file'] = ['resource/YunLv/ze_format.txt',
+                                'resource/YunLv/ping_format.txt']  # old
+    options['pingshui_file_new'] = ['resource/YunLv/yun_z_new.txt',
+                                    'resource/YunLv/yun_p_new.txt']  # new
+    options['hanzipinyin_file'] = 'resource/YunLv/hzpy.txt'
     return options
     
 options = get_options()
@@ -112,8 +112,6 @@ class yunLv(object):
                 for l in open(f).readlines():
                     for w in l:
                         self.vocSet_ping.add(w)
-                    # for w in l.decode('utf-8'):
-                    #     self.vocSet_ping.add(w.encode('utf-8'))
 
             # yunlist, used in function getYunLineLen
             self.pzlist = {}
@@ -128,9 +126,6 @@ class yunLv(object):
                 for w in l:
                     self.pzlist['z'].add(w)
                     temp_list.add(w)
-                # for w in l.decode('utf-8'):
-                #     self.pzlist['z'].add(w.encode('utf-8'))
-                #     temp_list.add(w.encode('utf-8'))
                 self.yunlist.append(temp_list)
 
             for l in open(pingshui_yun_file_ping).readlines():
@@ -138,9 +133,6 @@ class yunLv(object):
                 for w in l:
                     self.pzlist['p'].add(w)
                     temp_list.add(w)
-                # for w in l.decode('utf-8'):
-                #     self.pzlist['p'].add(w.encode('utf-8'))
-                #     temp_list.add(w.encode('utf-8'))
                 self.yunlist.append(temp_list)
 
             # yunlist_new, used in function yapingshui
@@ -154,9 +146,6 @@ class yunLv(object):
             for w in l.strip():
                 self.yun_pzlist['z'].add(w)
                 temp_list.add(w)
-            # for w in l.decode('utf-8').strip():
-            #     self.yun_pzlist['z'].add(w.encode('utf-8'))
-            #     temp_list.add(w.encode('utf-8'))
             self.yunlist_new.append(temp_list)
 
             for l in open(pingshui_yun_file_ping_new).readlines():
@@ -164,9 +153,6 @@ class yunLv(object):
                 for w in l.strip():
                     self.yun_pzlist['p'].add(w)
                     temp_list.add(w)
-                # for w in l.decode('utf-8').strip():
-                #     self.yun_pzlist['p'].add(w.encode('utf-8'))
-                #     temp_list.add(w.encode('utf-8'))
                 self.yunlist_new.append(temp_list)
 
     def getYunDiao(self, x):

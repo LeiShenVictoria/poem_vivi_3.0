@@ -40,10 +40,7 @@ word2id, id2word, emb, word2count, vocab_size = data_utils.Word2vec()
 hidden_size = 500
 embed_size = 200
 encoder1 = rnn.EncoderRNN_batch(embed_size, hidden_size).to(device)
-# encoder1 = rnn.EncoderRNN(embed_size, hidden_size).to(device)
 attn_decoder1 = rnn.AttnDecoderRNN(hidden_size,  vocab_size, dropout_p=0.1, embed_size = embed_size).to(device)
-# encoder1 = rnn.EncoderRNN(input_lang.n_words, hidden_size).to(device)
-# attn_decoder1 = rnn.AttnDecoderRNN(hidden_size, output_lang.n_words, dropout_p=0.1).to(device)
 
 if train_mode:
     train.trainIters_batch(training_set, encoder1, attn_decoder1, learning_rate, batch_size, epochs) # add lr

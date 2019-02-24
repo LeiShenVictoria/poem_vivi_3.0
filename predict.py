@@ -56,52 +56,6 @@ def evaluate(encoder, decoder, sentence): #
             #     break
             
         return decoded_words
-        
-        
-        # 
-        # input_tensor = sentence # 
-        # # input_tensor = data_utils.tensorFromSentence(input_lang, sentence)  # 
-        # input_length = input_tensor.size()[0]
-        # encoder_hidden = encoder.initHidden()
-        # 
-        # encoder_outputs = torch.zeros(max_length, encoder.hidden_size, device=device)
-        # 
-        # for ei in range(input_length):
-        #     encoder_output, encoder_hidden = encoder(input_tensor[ei],
-        #                                              encoder_hidden)
-        #     encoder_outputs[ei] += encoder_output[0, 0]
-        # 
-        # decoder_input = torch.tensor([[data_utils.SOS_token]], device=device)  # SOS
-        # 
-        # decoder_hidden = encoder_hidden
-        # 
-        # decoded_words = []
-        # decoder_attentions = torch.zeros(max_length, max_length)
-        # decoder_outputs = torch.zeros(max_length, vocab_size) #
-        # 
-        # for di in range(28):
-        #     decoder_output, decoder_hidden, decoder_attention = decoder(
-        #         decoder_input, decoder_hidden, encoder_outputs)
-        #     decoder_attentions[di] = decoder_attention.data
-        #     #
-        #     
-        #     # decoder_outputs[di] = decoder_output.data #
-        #     print(decoder_output.data.size()) #
-        #     topi, word = constrains.get_next_word(decoder_output.data, decoded_words)
-        #     decoded_words.append(word)
-        #     #
-        #     # topv, topi = decoder_output.data.topk(1) # topk returns a tuple(values, indices)
-        #     # if topi.item() == data_utils.EOS_token:
-        #     #     decoded_words.append('<EOS>')
-        #     #     break
-        #     # else:
-        #     #     decoded_words.append(id2word[str(topi.item())])
-        # 
-        #     decoder_input = topi.squeeze().detach()
-        # 
-        # print(decoder_attentions.size()) #
-        # 
-        # return decoded_words, decoder_attentions[:di + 1]
 
 
 ######################################################################

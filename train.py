@@ -84,60 +84,6 @@ def train_batch(batch_size, input_batch, input_lengths, target_batch, target_len
 
     return loss.item() / int(sum(target_lengths))
 
-# val
-def validate(batch_size, input_batch, input_lengths, target_batch, target_lengths, encoder, decoder,
-                encoder_optimizer, decoder_optimizer, criterion):  # 
-    encoder_hidden = encoder.initHidden(batch_size)
-
-    # encoder_optimizer.zero_grad()
-    # decoder_optimizer.zero_grad()
-
-    loss = 0
-
-    encoder_outputs, encoder_hidden = encoder(input_batch, input_lengths, encoder_hidden)
-
-    # 将encoder_outputs padding至INPUT_MAX_LENGTH 因为attention中已经固定此维度大小为INPUT_MAX_LENGTH
-    encoder_outputs_padded = torch.zeros(batch_size, data_utils.INPUT_MAX_LENGTH, encoder.hidden_size, device=device)
-    for b in range(batch_size):
-        for ei in range(input_lengths[b]):
-            encoder_outputs_padded[b, ei] = encoder_outputs[b, ei]
-
-    decoder_input = torch.tensor([[data_utils.SOS_token] * batch_size], device=device).transpose(0, 1)  #
-
-    decoder_hidden = encoder_hidden  # Use last hidden state from encoder to start decoder
-
-    target_max_length = max(target_lengths)
-
-    # use_teacher_forcing = False #
-    use_teacher_forcing = True if random.random() < teacher_forcing_ratio else False
-
-    if use_teacher_forcing:
-        # Teacher forcing: Feed the target as the next input
-        for di in range(target_max_length):
-            decoder_output, decoder_hidden, decoder_attention = decoder(
-                decoder_input, decoder_hidden, encoder_outputs_padded)
-            loss += criterion(decoder_output, target_batch[:, di])
-            decoder_input = target_batch[:, di].unsqueeze(1)  # Teacher forcing
-
-    else:
-        # Without teacher forcing: use its own predictions as the next input
-        for di in range(target_max_length):
-            decoder_output, decoder_hidden, decoder_attention = decoder(
-                decoder_input, decoder_hidden, encoder_outputs_padded)
-            target = target_batch[:, di]  # size正确
-            loss += criterion(decoder_output, target)  # input: batch*class, target: batch （结果取了batch平均）
-            topv, topi = decoder_output.topk(1)  # value 和 id
-            decoder_input = topi.detach()  # detach from history as input
-            # if decoder_input.item() == data_utils.EOS_token: # 
-            #     break
-
-    loss.backward()
-
-    # encoder_optimizer.step()
-    # decoder_optimizer.step()
-
-    return loss.item() / int(sum(target_lengths))
-
 ######################################################################
 # This is a helper function to print time elapsed and estimated time
 # remaining given the current time and progress %.
@@ -207,9 +153,9 @@ def trainIters_batch(training_set, encoder, decoder, learning_rate, batch_size, 
     )
 
     steps = lines // batch_size
-    print_every = steps // 5
+    print_every = steps // 5 # 每个epoch打印5个loss
     plot_every = print_every
-    # val_every = print_every # val
+    
     for epoch in range(epochs):  # 把整个数据进行训练的次数，通过loader来确定是否打乱数据，打乱比较好
         print('epoch: %d' % epoch)
         for step, (batch_x, x_len, batch_y, y_len) in enumerate(loader):  
@@ -227,14 +173,7 @@ def trainIters_batch(training_set, encoder, decoder, learning_rate, batch_size, 
             
             print_loss_total += loss
             plot_loss_total += loss
-
-            # TODO: validate 和 train 一样，只是不求导。如何复用？ 
-            # if step % val_every == 0:
-            #     val_pairs, val_lines = data_utils.read_val_data()
-            #     val_x, val_x_len, val_y = sort_batch_data(val_x, val_x_len, val_y)
-            #     val_loss = validate(BATCH_SIZE, val_x, val_x_len, val_y, val_y_len, encoder, decoder, 
-            #              encoder_optimizer, decoder_optimizer, criterion)
-                
+     
             if step % print_every == 0:
                 print_loss_avg = print_loss_total / print_every
                 print_loss_total = 0
